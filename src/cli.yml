@@ -8,8 +8,12 @@ args:
           long: output
           help: Specifies how the maze should be output
           takes_value: true
+          possible_values: ['ascii']
+          default_value: 'ascii'
     - algorithm:
           short: a
           long: algorithm
           help: Sets the algorithm used to build the maze
           takes_value: true
+          possible_values: ['binary', 'sidewinder']
+          default_value: 'sidewinder'
