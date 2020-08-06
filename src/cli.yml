@@ -1,0 +1,15 @@
+name: mazrs
+version: '0.1.0'
+author: Gary Holland <hello@garyhol.land>
+about: Rust implementation of Mazes For Programmers
+args:
+    - output:
+          short: o
+          long: output
+          help: Specifies how the maze should be output
+          takes_value: true
+    - algorithm:
+          short: a
+          long: algorithm
+          help: Sets the algorithm used to build the maze
+          takes_value: true
