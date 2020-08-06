@@ -2,6 +2,7 @@ use std::collections::BTreeSet;
 use std::collections::HashMap;
 use std::iter;
 use std::ops::Index;
+
 pub struct Grid {
     pub height: usize,
     pub width: usize,
