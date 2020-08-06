@@ -18,11 +18,11 @@ impl Grid {
             links: HashMap::new(),
         };
 
-        for i in 0..width {
+        for x in 0..width {
             let mut col: Vec<Cell> = Vec::with_capacity(height);
 
-            for j in 0..height {
-                col.push(Cell::new(i, j))
+            for y in 0..height {
+                col.push(Cell::new(x, y))
             }
 
             grid.cells.push(col)
