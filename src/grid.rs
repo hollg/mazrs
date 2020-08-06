@@ -32,16 +32,16 @@ impl Grid {
         return grid;
     }
 
-    pub fn each_cell<F>(&mut self, mut f: F)
-    where
-        F: FnMut(&mut Grid, &Cell),
-    {
-        for x in 0..self.width {
-            for y in 0..self.height {
-                f(self, &mut self.cells[x][y].clone());
-            }
-        }
-    }
+    // pub fn each_cell<F>(&mut self, mut f: F)
+    // where
+    //     F: FnMut(&mut Grid, &Cell),
+    // {
+    //     for x in 0..self.width {
+    //         for y in 0..self.height {
+    //             f(self, &mut self.cells[x][y].clone());
+    //         }
+    //     }
+    // }
 
     pub fn format(&mut self) -> String {
         let mut ascii = String::new();
