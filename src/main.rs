@@ -223,9 +223,9 @@ mod types {
 }
 use types::{Cell, Grid};
 fn binary_tree(grid: &mut Grid) {
-    let mut cells: Vec<Cell> = Vec::new();
-
     grid.each_cell(|grid, cell| {
+        let mut cells: Vec<Cell> = Vec::new();
+
         if cell.x < (grid.width - 1) {
             cells.push(grid[cell.x + 1][cell.y].clone());
         }
@@ -240,7 +240,7 @@ fn binary_tree(grid: &mut Grid) {
 }
 
 fn main() {
-    let mut grid = Grid::new(4, 4);
+    let mut grid = Grid::new(10, 10);
 
     binary_tree(&mut grid);
     print!("{}", grid.format());
