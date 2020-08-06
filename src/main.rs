@@ -1,6 +1,6 @@
 extern crate rand;
 
-use rand::Rng;
+use rand::{thread_rng, Rng};
 
 mod grid;
 use grid::{Cell, Grid};
@@ -17,7 +17,9 @@ fn binary_tree(grid: &mut Grid) {
         }
 
         if north_and_east.len() > 0 {
-            grid.link(cell, rand::thread_rng().choose(&north_and_east).unwrap())
+            let mut rng = thread_rng();
+            let i: usize = rng.gen_range(0, north_and_east.len()); 
+            grid.link(cell, &north_and_east[i])
         }
     })
 }
