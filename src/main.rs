@@ -1,50 +1,22 @@
+mod args;
 mod generate;
 mod grid;
-#[macro_use]
-extern crate clap;
-use clap::App;
+
+use args::{Algorithm, Output};
 use generate::binary_tree::binary_tree;
 use generate::sidewinder::sidewinder;
 use grid::Grid;
-use std::str::FromStr;
 
-enum Algorithm {
-    Binary,
-    Sidewinder,
-}
+#[macro_use]
+extern crate clap;
+use clap::App;
 
-impl FromStr for Algorithm {
-    type Err = &'static str;
-
-    fn from_str(s: &str) -> Result<Self, Self::Err> {
-        match s {
-            "binary" => Ok(Algorithm::Binary),
-            "sidewinder" => Ok(Algorithm::Sidewinder),
-            _ => Err("no match"),
-        }
-    }
-}
-
-enum Output {
-    Ascii,
-}
-
-impl FromStr for Output {
-    type Err = &'static str;
-
-    fn from_str(s: &str) -> Result<Self, Self::Err> {
-        match s {
-            "ascii" => Ok(Output::Ascii),
-            _ => Err("no match"),
-        }
-    }
-}
 fn main() {
     let yaml = load_yaml!("cli.yml");
     let matches = App::from_yaml(yaml).get_matches();
 
-    let algorithm = Algorithm::from_str(matches.value_of("algorithm").unwrap());
-    let output = Output::from_str(matches.value_of("output").unwrap());
+    let algorithm = matches.value_of("algorithm").unwrap().parse();
+    let output = matches.value_of("output").unwrap().parse();
 
     let mut grid = Grid::new(10, 10);
 
