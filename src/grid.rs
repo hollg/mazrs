@@ -5,6 +5,7 @@ use std::ops::Index;
 use svg::node::element::path::Data;
 use svg::node::element::Path;
 use svg::Document;
+use svg::Node;
 pub struct Grid {
     pub height: usize,
     pub width: usize,
@@ -202,29 +203,31 @@ impl Grid {
 
         let background_color = "white";
         let wall_color = "black";
-        let data = Data::new()
-            .move_to((10, 10))
-            .line_by((0, 50))
-            .line_by((50, 0))
-            .line_by((0, -50))
-            .close();
-        let data2 = Data::new()
-            .move_to((10, 10))
-            .line_by((1, 55))
-            .line_by((70, 2))
-            .line_by((0, -50))
-            .close();
 
-        let path = Path::new()
-            .set("fill", background_color)
-            .set("stroke", wall_color)
-            .set("stroke-width", 3)
-            .set("d", data)
-            .set("d", data2);
+        let mut document = Document::new().set("viewBox", (0, 0, img_width, img_height));
 
-        let document = Document::new()
-            .set("viewBox", (0, 0, img_width, img_height))
-            .add(path);
+        self.each_cell(|_grid, cell| {
+            let x1 = cell.x * cell_size;
+            let y1 = cell.y * cell_size;
+            // let x2 = cell.x * cell_size;
+            let y2 = cell.y * cell_size;
+
+            let data = Data::new()
+                .move_to((x1, y1))
+                .line_by((x1, y2))
+                // .line_by((x2, y2))
+                // .line_by((x1, y2))
+                .close();
+
+            let path = Path::new()
+                .set("fill", background_color)
+                .set("stroke", wall_color)
+                .set("stroke-width", 1)
+                .set("d", data);
+
+            document.append(path);
+        });
+
         svg::save("maze.svg", &document).unwrap();
     }
 }

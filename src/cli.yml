@@ -9,7 +9,7 @@ args:
           help: Specifies how the maze should be output
           takes_value: true
           possible_values: ['ascii', 'svg']
-          default_value: 'ascii'
+          default_value: 'svg'
     - algorithm:
           short: a
           long: algorithm
