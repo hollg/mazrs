@@ -8,7 +8,7 @@ args:
           long: output
           help: Specifies how the maze should be output
           takes_value: true
-          possible_values: ['ascii']
+          possible_values: ['ascii', 'svg']
           default_value: 'ascii'
     - algorithm:
           short: a

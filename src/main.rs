@@ -30,6 +30,9 @@ fn main() {
         Ok(Output::Ascii) => {
             print!("{}", grid.format());
         }
+        Ok(Output::Svg) => {
+            grid.to_svg();
+        }
         Err(_) => panic!("Invalid output argument"),
     }
 }

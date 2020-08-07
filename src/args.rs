@@ -18,6 +18,7 @@ impl FromStr for Algorithm {
 
 pub enum Output {
     Ascii,
+    Svg,
 }
 
 impl FromStr for Output {
@@ -25,6 +26,7 @@ impl FromStr for Output {
     fn from_str(s: &str) -> Result<Self, Self::Err> {
         match s {
             "ascii" => Ok(Output::Ascii),
+            "svg" => Ok(Output::Svg),
             _ => Err("no match"),
         }
     }

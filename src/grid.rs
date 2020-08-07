@@ -2,7 +2,9 @@ use std::collections::BTreeSet;
 use std::collections::HashMap;
 use std::iter;
 use std::ops::Index;
-
+use svg::node::element::path::Data;
+use svg::node::element::Path;
+use svg::Document;
 pub struct Grid {
     pub height: usize,
     pub width: usize,
@@ -192,6 +194,39 @@ impl Grid {
     // pub fn size(&mut self) -> usize {
     //     self.width * self.height
     // }
+
+    pub fn to_svg(&mut self) {
+        let cell_size = 10;
+        let img_width = cell_size * self.width;
+        let img_height = cell_size * self.height;
+
+        let background_color = "white";
+        let wall_color = "black";
+        let data = Data::new()
+            .move_to((10, 10))
+            .line_by((0, 50))
+            .line_by((50, 0))
+            .line_by((0, -50))
+            .close();
+        let data2 = Data::new()
+            .move_to((10, 10))
+            .line_by((1, 55))
+            .line_by((70, 2))
+            .line_by((0, -50))
+            .close();
+
+        let path = Path::new()
+            .set("fill", background_color)
+            .set("stroke", wall_color)
+            .set("stroke-width", 3)
+            .set("d", data)
+            .set("d", data2);
+
+        let document = Document::new()
+            .set("viewBox", (0, 0, img_width, img_height))
+            .add(path);
+        svg::save("maze.svg", &document).unwrap();
+    }
 }
 
 impl Index<usize> for Grid {
