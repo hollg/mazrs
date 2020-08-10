@@ -2,7 +2,10 @@ use std::collections::BTreeSet;
 use std::collections::HashMap;
 use std::iter;
 use std::ops::Index;
-
+use svg::node::element::path::Data;
+use svg::node::element::Path;
+use svg::Document;
+use svg::Node;
 pub struct Grid {
     pub height: usize,
     pub width: usize,
@@ -32,16 +35,16 @@ impl Grid {
         return grid;
     }
 
-    // pub fn each_cell<F>(&mut self, mut f: F)
-    // where
-    //     F: FnMut(&mut Grid, &Cell),
-    // {
-    //     for x in 0..self.width {
-    //         for y in 0..self.height {
-    //             f(self, &mut self.cells[x][y].clone());
-    //         }
-    //     }
-    // }
+    pub fn each_cell<F>(&mut self, mut f: F)
+    where
+        F: FnMut(&mut Grid, &Cell),
+    {
+        for x in 0..self.width {
+            for y in 0..self.height {
+                f(self, &mut self.cells[x][y].clone());
+            }
+        }
+    }
 
     pub fn format(&mut self) -> String {
         let mut ascii = String::new();
@@ -192,6 +195,65 @@ impl Grid {
     // pub fn size(&mut self) -> usize {
     //     self.width * self.height
     // }
+
+    pub fn to_svg(&self) {
+        let cell_size = 10;
+        let img_width = cell_size * self.width;
+        let img_height = cell_size * self.height;
+
+        let background_color = "white";
+        let wall_color = "black";
+
+        let mut document = Document::new().set("viewBox", (0, 0, img_width, img_height));
+
+        let boundary_wall_data = Data::new()
+            .move_to((0, 0))
+            .line_to((img_width, 0))
+            .line_to((img_width, img_height))
+            .line_to((0, img_height))
+            .line_to((0, 0));
+        let boundary_wall_path = Path::new()
+            .set("fill", background_color)
+            .set("stroke", wall_color)
+            .set("stroke-width", 1)
+            .set("d", boundary_wall_data);
+        document.append(boundary_wall_path);
+
+        for y in 0..self.height {
+            for x in 0..self.width {
+                let cell = self[x][y];
+
+                let is_linked_east = self.is_linked_indices(cell.x, cell.y, cell.x + 1, cell.y);
+                let is_linked_south = self.is_linked_indices(cell.x, cell.y, cell.x, cell.y + 1);
+
+                let x1 = cell.x * cell_size;
+                let y1 = cell.y * cell_size;
+                let x2 = (cell.x + 1) * cell_size;
+                let y2 = (cell.y + 1) * cell_size;
+
+                let mut cell_data = Data::new();
+
+                // east wall
+                if !is_linked_east {
+                    cell_data = cell_data.move_to((x2, y1)).line_to((x2, y2));
+                }
+
+                // south wall
+                if !is_linked_south {
+                    cell_data = cell_data.move_to((x1, y2)).line_to((x2, y2));
+                }
+
+                cell_data = cell_data.close();
+                let cell_data_path = Path::new()
+                    .set("fill", background_color)
+                    .set("stroke", wall_color)
+                    .set("stroke-width", 1)
+                    .set("d", cell_data);
+                document.append(cell_data_path);
+            }
+        }
+        svg::save("maze.svg", &document).unwrap();
+    }
 }
 
 impl Index<usize> for Grid {
