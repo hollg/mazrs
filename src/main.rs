@@ -16,7 +16,7 @@ fn main() {
     let matches = App::from_yaml(yaml).get_matches();
 
     let algorithm = matches.value_of("algorithm").unwrap().parse();
-    // let output = matches.value_of("output").unwrap().parse();
+    let output = matches.value_of("output").unwrap().parse();
 
     let mut grid = Grid::new(10, 10);
 
@@ -26,15 +26,13 @@ fn main() {
         Err(_) => panic!("Invalid algorithm argument"),
     }
 
-    // match output {
-    //     Ok(Output::Ascii) => {
-    //         print!("{}", grid.format());
-    //     }
-    //     Ok(Output::Svg) => {
-    //         grid.to_svg();
-    //     }
-    //     Err(_) => panic!("Invalid output argument"),
-    // }
-    print!("{}", grid.format());
-    grid.to_svg();
+    match output {
+        Ok(Output::Ascii) => {
+            print!("{}", grid.format());
+        }
+        Ok(Output::Svg) => {
+            grid.to_svg();
+        }
+        Err(_) => panic!("Invalid output argument"),
+    }
 }
