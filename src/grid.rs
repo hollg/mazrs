@@ -196,7 +196,7 @@ impl Grid {
     //     self.width * self.height
     // }
 
-    pub fn to_svg(&mut self) {
+    pub fn to_svg(&self) {
         let cell_size = 10;
         let img_width = cell_size * self.width;
         let img_height = cell_size * self.height;
@@ -206,28 +206,52 @@ impl Grid {
 
         let mut document = Document::new().set("viewBox", (0, 0, img_width, img_height));
 
-        self.each_cell(|_grid, cell| {
-            let x1 = cell.x * cell_size;
-            let y1 = cell.y * cell_size;
-            // let x2 = cell.x * cell_size;
-            let y2 = cell.y * cell_size;
+        let boundary_wall_data = Data::new()
+            .move_to((0, 0))
+            .line_to((img_width, 0))
+            .line_to((img_width, img_height))
+            .line_to((0, img_height))
+            .line_to((0, 0));
+        let boundary_wall_path = Path::new()
+            .set("fill", background_color)
+            .set("stroke", wall_color)
+            .set("stroke-width", 1)
+            .set("d", boundary_wall_data);
+        document.append(boundary_wall_path);
 
-            let data = Data::new()
-                .move_to((x1, y1))
-                .line_by((x1, y2))
-                // .line_by((x2, y2))
-                // .line_by((x1, y2))
-                .close();
+        for y in 0..self.height {
+            for x in 0..self.width {
+                let cell = self[x][y];
 
-            let path = Path::new()
-                .set("fill", background_color)
-                .set("stroke", wall_color)
-                .set("stroke-width", 1)
-                .set("d", data);
+                let is_linked_east = self.is_linked_indices(cell.x, cell.y, cell.x + 1, cell.y);
+                let is_linked_south = self.is_linked_indices(cell.x, cell.y, cell.x, cell.y + 1);
 
-            document.append(path);
-        });
+                let x1 = cell.x * cell_size;
+                let y1 = cell.y * cell_size;
+                let x2 = (cell.x + 1) * cell_size;
+                let y2 = (cell.y + 1) * cell_size;
 
+                let mut cell_data = Data::new();
+
+                // east wall
+                if !is_linked_east {
+                    cell_data = cell_data.move_to((x2, y1)).line_to((x2, y2));
+                }
+
+                // south wall
+                if !is_linked_south {
+                    cell_data = cell_data.move_to((x1, y2)).line_to((x2, y2));
+                }
+
+                cell_data = cell_data.close();
+                let cell_data_path = Path::new()
+                    .set("fill", background_color)
+                    .set("stroke", wall_color)
+                    .set("stroke-width", 1)
+                    .set("d", cell_data);
+                document.append(cell_data_path);
+            }
+        }
         svg::save("maze.svg", &document).unwrap();
     }
 }
