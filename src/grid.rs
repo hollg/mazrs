@@ -248,6 +248,7 @@ impl Grid {
                     .set("fill", background_color)
                     .set("stroke", wall_color)
                     .set("stroke-width", 1)
+                    .set("stroke-linejoin", "round")
                     .set("d", cell_data);
                 document.append(cell_data_path);
             }
