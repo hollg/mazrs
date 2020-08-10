@@ -3,8 +3,8 @@ mod generate;
 mod grid;
 
 use args::{Algorithm, Output};
-use generate::binary_tree::binary_tree;
-use generate::sidewinder::sidewinder;
+use generate::binary_tree;
+use generate::sidewinder;
 use grid::Grid;
 
 #[macro_use]
@@ -21,8 +21,8 @@ fn main() {
     let mut grid = Grid::new(10, 10);
 
     match algorithm {
-        Ok(Algorithm::Binary) => binary_tree(&mut grid),
-        Ok(Algorithm::Sidewinder) => sidewinder(&mut grid),
+        Ok(Algorithm::Binary) => binary_tree::generate(&mut grid),
+        Ok(Algorithm::Sidewinder) => sidewinder::generate(&mut grid),
         Err(_) => panic!("Invalid algorithm argument"),
     }
 

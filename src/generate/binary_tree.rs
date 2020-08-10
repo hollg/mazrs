@@ -4,7 +4,7 @@ use rand::{thread_rng, Rng};
 
 use crate::grid::{Cell, Grid};
 
-pub fn binary_tree(grid: &mut Grid) {
+pub fn generate(grid: &mut Grid) {
     grid.each_cell(|grid, cell| {
         let mut north_and_east: Vec<Cell> = Vec::new();
 

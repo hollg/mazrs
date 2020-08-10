@@ -5,7 +5,7 @@ use rand::{thread_rng, Rng};
 
 use crate::grid::{Cell, Grid};
 
-pub fn sidewinder(grid: &mut Grid) {
+pub fn generate(grid: &mut Grid) {
     for y in 0..grid.height {
         let mut run: Vec<Cell> = Vec::new();
 
