@@ -3,7 +3,7 @@ mod generate;
 // mod grid;
 mod types;
 use args::{Algorithm, Output};
-use generate::{binary_tree, sidewinder};
+use generate::{aldous_broder, binary_tree, sidewinder};
 // use grid::Grid;
 use types::grid::*;
 
@@ -23,6 +23,7 @@ fn main() {
     match algorithm {
         Ok(Algorithm::Binary) => binary_tree::generate(&mut grid),
         Ok(Algorithm::Sidewinder) => sidewinder::generate(&mut grid),
+        Ok(Algorithm::AldousBroder) => aldous_broder::generate(&mut grid),
         Err(_) => panic!("Invalid algorithm argument"),
     }
 

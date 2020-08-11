@@ -1,4 +1,5 @@
 use super::cell::Cell;
+use rand::{thread_rng, Rng};
 use std::collections::BTreeSet;
 use std::collections::HashMap;
 use std::iter;
@@ -134,38 +135,35 @@ impl Grid {
     //     }
     // }
 
-    // pub fn neighbours(&mut self, cell: Cell) -> Vec<Cell> {
-    //     let mut neighbours = Vec::new();
+    pub fn neighbours(&mut self, cell: Cell) -> Vec<Cell> {
+        let mut neighbours = Vec::new();
 
-    //     if cell.x > 0 {
-    //         neighbours.push(self.cells[cell.x - 1][cell.y].clone())
-    //     };
+        if cell.x > 0 {
+            neighbours.push(self.cells[cell.x - 1][cell.y].clone())
+        };
 
-    //     if cell.x < self.width - 1 {
-    //         neighbours.push(self.cells[cell.x + 1][cell.y].clone());
-    //     }
+        if cell.x < self.width - 1 {
+            neighbours.push(self.cells[cell.x + 1][cell.y].clone());
+        }
 
-    //     if cell.y > 0 {
-    //         neighbours.push(self.cells[cell.x][cell.y - 1].clone());
-    //     }
+        if cell.y > 0 {
+            neighbours.push(self.cells[cell.x][cell.y - 1].clone());
+        }
 
-    //     if cell.y < self.height - 1 {
-    //         neighbours.push(self.cells[cell.x][cell.y + 1].clone());
-    //     };
+        if cell.y < self.height - 1 {
+            neighbours.push(self.cells[cell.x][cell.y + 1].clone());
+        };
 
-    //     return neighbours;
-    // }
+        return neighbours;
+    }
 
-    // pub fn random_cell(&self) -> Cell {
-    //     let between_x = Range::new(0, self.width);
-    //     let between_y = Range::new(0, self.height);
-    //     let mut rng = rand::thread_rng();
+    pub fn random_cell(&self) -> Cell {
+        let mut rng = thread_rng();
+        let x = rng.gen_range(0, self.width);
+        let y = rng.gen_range(0, self.height);
 
-    //     let x = between_x.ind_sample(&mut rng);
-    //     let y = between_y.ind_sample(&mut rng);
-
-    //     self.cells[x][y].clone()
-    // }
+        self.cells[x][y].clone()
+    }
 
     // pub fn unlink(&mut self, cell_a: &Cell, cell_b: &Cell) {
     //     match self.links.contains_key(&(cell_a.x, cell_a.y)) {
@@ -193,9 +191,9 @@ impl Grid {
     //     }
     // }
 
-    // pub fn size(&mut self) -> usize {
-    //     self.width * self.height
-    // }
+    pub fn size(&mut self) -> usize {
+        self.width * self.height
+    }
 
     pub fn to_svg(&self) {
         let cell_size = 10;
