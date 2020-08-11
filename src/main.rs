@@ -3,8 +3,7 @@ mod generate;
 mod grid;
 
 use args::{Algorithm, Output};
-use generate::binary_tree;
-use generate::sidewinder;
+use generate::{binary_tree, sidewinder};
 use grid::Grid;
 
 #[macro_use]
