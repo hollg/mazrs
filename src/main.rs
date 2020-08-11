@@ -17,8 +17,20 @@ fn main() {
 
     let algorithm = matches.value_of("algorithm").unwrap().parse();
     let output = matches.value_of("output").unwrap().parse();
+    let height = matches
+        .value_of("height")
+        .unwrap()
+        .to_string()
+        .parse::<usize>()
+        .unwrap();
+    let width = matches
+        .value_of("width")
+        .unwrap()
+        .to_string()
+        .parse::<usize>()
+        .unwrap();
 
-    let mut grid = Grid::new(10, 10);
+    let mut grid = Grid::new(height, width);
 
     match algorithm {
         Ok(Algorithm::Binary) => binary_tree::generate(&mut grid),

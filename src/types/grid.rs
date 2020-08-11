@@ -203,18 +203,20 @@ impl Grid {
         let background_color = "white";
         let wall_color = "black";
 
-        let mut document = Document::new().set("viewBox", (0, 0, img_width, img_height));
+        let mut document = Document::new().set("viewBox", (0, -5, img_width, img_height + 10));
 
         let boundary_wall_data = Data::new()
             .move_to((0, 0))
             .line_to((img_width, 0))
             .line_to((img_width, img_height))
             .line_to((0, img_height))
-            .line_to((0, 0));
+            .line_to((0, 0))
+            .line_to((img_width, 0)); // hack to round the north-west corner
         let boundary_wall_path = Path::new()
             .set("fill", background_color)
             .set("stroke", wall_color)
             .set("stroke-width", 1)
+            .set("stroke-linejoin", "round")
             .set("d", boundary_wall_data);
         document.append(boundary_wall_path);
 
