@@ -208,9 +208,10 @@ impl Grid {
         let boundary_wall_data = Data::new()
             .move_to((0, 0))
             .line_to((img_width, 0))
-            .line_to((img_width, img_height))
+            .line_to((img_width, img_height - cell_size))
+            .move_to((img_width, img_height))
             .line_to((0, img_height))
-            .line_to((0, 0));
+            .line_to((0, cell_size));
         let boundary_wall_path = Path::new()
             .set("fill", background_color)
             .set("stroke", wall_color)
@@ -235,7 +236,7 @@ impl Grid {
                 let mut cell_data = Data::new();
 
                 // east wall
-                if !is_linked_east {
+                if !is_linked_east && cell.x != self.width - 1 {
                     cell_data = cell_data.move_to((x2, y1)).line_to((x2, y2));
                 }
 
