@@ -210,13 +210,13 @@ impl Grid {
             .line_to((img_width, 0))
             .line_to((img_width, img_height))
             .line_to((0, img_height))
-            .line_to((0, 0))
-            .line_to((img_width, 0)); // hack to round the north-west corner
+            .line_to((0, 0));
         let boundary_wall_path = Path::new()
             .set("fill", background_color)
             .set("stroke", wall_color)
             .set("stroke-width", 1)
             .set("stroke-linejoin", "round")
+            .set("stroke-linecap", "round")
             .set("d", boundary_wall_data);
         document.append(boundary_wall_path);
 
@@ -250,6 +250,7 @@ impl Grid {
                     .set("stroke", wall_color)
                     .set("stroke-width", 1)
                     .set("stroke-linejoin", "round")
+                    .set("stroke-linecap", "round")
                     .set("d", cell_data);
                 document.append(cell_data_path);
             }
