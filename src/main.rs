@@ -1,10 +1,11 @@
 mod args;
 mod generate;
-mod grid;
-
+// mod grid;
+mod types;
 use args::{Algorithm, Output};
 use generate::{binary_tree, sidewinder};
-use grid::Grid;
+// use grid::Grid;
+use types::grid::*;
 
 #[macro_use]
 extern crate clap;

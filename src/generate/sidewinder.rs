@@ -3,7 +3,7 @@ extern crate rand;
 use rand::seq::SliceRandom;
 use rand::{thread_rng, Rng};
 
-use crate::grid::{Cell, Grid};
+use crate::types::{cell::*, grid::*};
 
 pub fn generate(grid: &mut Grid) {
     for y in 0..grid.height {
