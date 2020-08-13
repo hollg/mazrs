@@ -14,36 +14,41 @@ pub fn generate(grid: &mut Grid) {
         }
     }
 
-    let first_to_visit = unvisited_cells[rng.gen_range(0, unvisited_cells.len())];
-    unvisited_cells.retain(|&coords| coords != first_to_visit);
+    let first_target = unvisited_cells[rng.gen_range(0, unvisited_cells.len())];
+    println!("first target: {:?}", first_target);
+    unvisited_cells.retain(|&coords| coords != first_target);
 
     // build path
     while unvisited_cells.len() > 0 {
-        // let mut current_cell = unvisited_cells[rng.gen_range(0, unvisited_cells.len())];
-        let mut path: Vec<(usize, usize)> =
-            vec![unvisited_cells[rng.gen_range(0, unvisited_cells.len())]];
+        let mut target_cell = unvisited_cells[rng.gen_range(0, unvisited_cells.len())];
+        println!("target_cell: {:?}", target_cell);
+        let mut path: Vec<(usize, usize)> = vec![target_cell];
 
-        while unvisited_cells.contains(path.last().unwrap()) {
-            let neighbours = grid.neighbours(grid[path.last().unwrap().0][path.last().unwrap().1]);
-            let random_neighbour = neighbours.choose(&mut rng).unwrap();
-            let target = (random_neighbour.x, random_neighbour.y);
-
-            match path.binary_search(&target) {
+        while unvisited_cells.contains(&target_cell) {
+            let neighbours = grid.neighbours(grid[target_cell.0][target_cell.1]);
+            let random_neighbour = neighbours.choose(&mut rand::thread_rng()).unwrap();
+            target_cell = (random_neighbour.x, random_neighbour.y);
+            println!("target_cell: {:?}", target_cell);
+            match path.binary_search(&target_cell) {
                 Ok(index) => {
                     path.truncate(index + 1);
                 }
                 _ => {
-                    path.push(target);
+                    path.push(target_cell);
                 }
             }
         }
 
-        // carve
         for window in path.windows(2) {
-            let cell_a = grid[window[0].0][window[0].1];
-            let cell_b = grid[window[1].0][window[1].1];
+            let a = window[0];
+            let b = window[1];
+            let cell_a = grid[a.0][a.1];
+            let cell_b = grid[b.0][b.1];
+
             grid.link(&cell_a, &cell_b);
-            unvisited_cells.retain(|&x| x != window[0] && x != window[1]);
+            unvisited_cells.retain(|&x| x != a && x != b);
         }
+
+        println!("{}", grid.format());
     }
 }
