@@ -1,7 +1,8 @@
 extern crate rand;
 
 use crate::types::{cell::Cell, grid::Grid};
-use rand::{thread_rng, Rng};
+use rand::seq::SliceRandom;
+use rand::thread_rng;
 
 pub fn generate(grid: &mut Grid) {
     grid.each_cell(|grid, cell| {
@@ -16,8 +17,7 @@ pub fn generate(grid: &mut Grid) {
 
         if north_and_east.len() > 0 {
             let mut rng = thread_rng();
-            let i: usize = rng.gen_range(0, north_and_east.len());
-            grid.link(cell, &north_and_east[i])
+            grid.link(cell, north_and_east.choose(&mut rng).unwrap())
         }
     })
 }
