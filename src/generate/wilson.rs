@@ -13,21 +13,23 @@ pub fn generate(grid: &mut Grid) {
         }
     }
 
-    let first_to_visit = unvisited_cells[rng.gen_range(0, unvisited_cells.len())];
-    unvisited_cells.retain(|&coords| coords != first_to_visit);
+    let first_target = unvisited_cells[rng.gen_range(0, unvisited_cells.len())];
+    println!("first target: {:?}", first_target);
+    unvisited_cells.retain(|&coords| coords != first_target);
 
     while unvisited_cells.len() > 0 {
         let mut current_cell = unvisited_cells[rng.gen_range(0, unvisited_cells.len())];
+        println!("current_cell: {:?}", current_cell);
         let mut path: Vec<(usize, usize)> = vec![current_cell];
 
         while unvisited_cells.contains(&current_cell) {
             let neighbours = grid.neighbours(grid[current_cell.0][current_cell.1]);
             let random_neighbour = neighbours.choose(&mut rand::thread_rng()).unwrap();
             current_cell = (random_neighbour.x, random_neighbour.y);
-
+            println!("current_cell: {:?}", current_cell);
             match path.binary_search(&current_cell) {
                 Ok(index) => {
-                    path = path[0..index + 1].to_vec();
+                    path.truncate(index +1);
                 }
                 _ => {
                     path.push(current_cell);
@@ -35,14 +37,16 @@ pub fn generate(grid: &mut Grid) {
             }
         }
 
-        for i in 0..path.len() - 1 {
-            if let Some(j) = path.get(i + 1) {
-                let a = path[i];
-                let cell_a = grid[a.0][a.1];
-                let cell_b = grid[j.0][j.1];
-                grid.link(&cell_a, &cell_b);
-                unvisited_cells.retain(|&x| x != a);
-            }
+        for window in path.windows(2) {
+            let a = window[0];
+            let b = window[1];
+            let cell_a = grid[a.0][a.1];
+            let cell_b = grid[b.0][b.1];
+
+            grid.link(&cell_a, &cell_b);
+            unvisited_cells.retain(|&x| x != a && x != b);
         }
+
+        println!("{}", grid.format());
     }
 }
