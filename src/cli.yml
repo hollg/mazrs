@@ -8,13 +8,13 @@ args:
           long: height
           help: Specifies the number of rows in the grid
           takes_value: true
-          default_value: '3'
+          default_value: '20'
     - width:
           short: w
           long: width
           help: Specifies the number of columns in the grid
           takes_value: true
-          default_value: '3'
+          default_value: '20'
     - output:
           short: o
           long: output
@@ -27,5 +27,5 @@ args:
           long: algorithm
           help: Sets the algorithm used to build the maze
           takes_value: true
-          possible_values: ['binary', 'sidewinder', 'aldous-broder', 'wilson']
-          default_value: 'wilson'
+          possible_values: ['binary', 'sidewinder', 'aldous-broder']
+          default_value: 'aldous-broder'
