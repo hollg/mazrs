@@ -1,8 +1,7 @@
 extern crate rand;
 
-use rand::{thread_rng, Rng};
-
 use crate::types::{cell::Cell, grid::Grid};
+use rand::{thread_rng, Rng};
 
 pub fn generate(grid: &mut Grid) {
     grid.each_cell(|grid, cell| {
