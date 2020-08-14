@@ -1,0 +1,31 @@
+name: mazrs
+version: '0.1.0'
+author: Gary Holland <hello@garyhol.land>
+about: Rust implementation of Mazes For Programmers
+args:
+    - height:
+          short: h
+          long: height
+          help: Specifies the number of rows in the grid
+          takes_value: true
+          default_value: '20'
+    - width:
+          short: w
+          long: width
+          help: Specifies the number of columns in the grid
+          takes_value: true
+          default_value: '20'
+    - output:
+          short: o
+          long: output
+          help: Specifies how the maze should be output
+          takes_value: true
+          possible_values: ['ascii', 'svg']
+          default_value: 'svg'
+    - algorithm:
+          short: a
+          long: algorithm
+          help: Sets the algorithm used to build the maze
+          takes_value: true
+          possible_values: ['binary', 'sidewinder', 'aldous-broder']
+          default_value: 'aldous-broder'

@@ -1,0 +1,12 @@
+[package]
+authors = ["Gary Holland <garyhollandxyz@gmail.com>"]
+edition = "2018"
+name = "mazrs_cli"
+version = "0.1.0"
+
+path = "src/lib.rs"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+[dependencies]
+clap = {version = "~2.27.0", features = ["yaml"]}
+mazrs_lib = {path = "../mazrs_lib/"}
