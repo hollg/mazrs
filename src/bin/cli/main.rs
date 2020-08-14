@@ -1,18 +1,14 @@
 mod args;
-mod generate;
-// mod grid;
-mod types;
 use args::{Algorithm, Output};
-use generate::{aldous_broder, binary_tree, sidewinder};
-// use grid::Grid;
-use types::grid::*;
+use mazrslib::generate::{aldous_broder, binary_tree, sidewinder};
+use mazrslib::types::grid::*;
 
 #[macro_use]
 extern crate clap;
 use clap::App;
 
 fn main() {
-    let yaml = load_yaml!("cli.yml");
+    let yaml = load_yaml!("cli.yaml");
     let matches = App::from_yaml(yaml).get_matches();
 
     let algorithm = matches.value_of("algorithm").unwrap().parse();
