@@ -1,2 +1,4 @@
 target
 maze.svg
+node_modules
+dist
