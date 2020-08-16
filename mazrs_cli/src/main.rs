@@ -2,7 +2,7 @@ mod args;
 use args::{Algorithm, Output};
 use mazrs_lib::generate::{aldous_broder, binary_tree, sidewinder};
 use mazrs_lib::types::grid::*;
-
+use svg;
 #[macro_use]
 extern crate clap;
 use clap::App;
@@ -40,7 +40,8 @@ fn main() {
             print!("{}", grid.format());
         }
         Ok(Output::Svg) => {
-            grid.to_svg();
+            let doc = grid.to_svg();
+            svg::save("maze.svg", &doc).unwrap();
         }
         Err(_) => panic!("Invalid output argument"),
     }

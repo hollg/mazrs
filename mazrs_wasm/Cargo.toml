@@ -1,0 +1,17 @@
+[package]
+authors = ["Gary Holland <garyhollandxyz@gmail.com>"]
+edition = "2018"
+name = "mazrs_wasm"
+version = "0.1.0"
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[lib]
+crate-type = ["cdylib"]
+[package.metadata.wasm-pack.profile.release]
+debug = true
+wasm-opt = false
+
+[dependencies]
+console_error_panic_hook = "0.1.6"
+mazrs_lib = {path = "../mazrs_lib/"}
+wasm-bindgen = "0.2"

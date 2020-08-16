@@ -1,0 +1,15 @@
+{
+	"name": "www",
+	"version": "1.0.0",
+	"main": "index.js",
+	"license": "MIT",
+	"dependencies": {
+		"mazrs_wasm": "../mazrs_wasm/pkg"
+	},
+	"devDependencies": {
+		"webpack": "^4.25.1",
+		"webpack-cli": "^3.1.2",
+		"webpack-dev-server": "^3.1.10"
+	},
+	"scripts": {}
+}

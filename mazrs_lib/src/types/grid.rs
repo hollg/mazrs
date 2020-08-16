@@ -195,7 +195,7 @@ impl Grid {
         self.width * self.height
     }
 
-    pub fn to_svg(&self) {
+    pub fn to_svg(&self) -> svg::node::element::SVG {
         let cell_size = 10;
         let img_width = cell_size * self.width;
         let img_height = cell_size * self.height;
@@ -203,7 +203,8 @@ impl Grid {
         let background_color = "white";
         let wall_color = "black";
 
-        let mut document = Document::new().set("viewBox", (0, -5, img_width, img_height + 10));
+        let mut document =
+            Document::new().set("viewBox", (-5, -5, img_width + 10, img_height + 10));
 
         let boundary_wall_data = Data::new()
             .move_to((0, 0))
@@ -256,7 +257,7 @@ impl Grid {
                 document.append(cell_data_path);
             }
         }
-        svg::save("maze.svg", &document).unwrap();
+        document
     }
 }
 
