@@ -1,6 +1,6 @@
 mod args;
 use args::{Algorithm, Output};
-use mazrs_lib::generate::{aldous_broder, binary_tree, sidewinder};
+use mazrs_lib::generate::binary_tree;
 use mazrs_lib::types::grid::*;
 use svg;
 #[macro_use]
@@ -30,8 +30,8 @@ fn main() {
 
     match algorithm {
         Ok(Algorithm::Binary) => binary_tree::generate(&mut grid),
-        Ok(Algorithm::Sidewinder) => sidewinder::generate(&mut grid),
-        Ok(Algorithm::AldousBroder) => aldous_broder::generate(&mut grid),
+        // Ok(Algorithm::Sidewinder) => sidewinder::generate(&mut grid),
+        // Ok(Algorithm::AldousBroder) => aldous_broder::generate(&mut grid),
         Err(_) => panic!("Invalid algorithm argument"),
     }
 

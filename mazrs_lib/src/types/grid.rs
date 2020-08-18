@@ -1,7 +1,5 @@
 use super::cell::Cell;
 use rand::{thread_rng, Rng};
-use std::collections::BTreeSet;
-use std::collections::HashMap;
 use std::iter;
 use std::ops::Index;
 use svg::node::element::path::Data;
@@ -11,42 +9,29 @@ use svg::Node;
 pub struct Grid {
     pub height: usize,
     pub width: usize,
-    pub cells: Vec<Vec<Cell>>,
-    pub links: HashMap<(usize, usize), BTreeSet<(usize, usize)>>,
+    pub cells: Box<[Cell]>,
+    // pub links: HashMap<(usize, usize), BTreeSet<(usize, usize)>>,
 }
 
 impl Grid {
     pub fn new(height: usize, width: usize) -> Grid {
-        let mut grid = Grid {
+        let grid = Grid {
             height,
             width,
-            cells: Vec::with_capacity(width),
-            links: HashMap::new(),
+            cells: vec![Cell::new(); width * height].into_boxed_slice(),
         };
-
-        for x in 0..width {
-            let mut col: Vec<Cell> = Vec::with_capacity(height);
-
-            for y in 0..height {
-                col.push(Cell::new(x, y))
-            }
-
-            grid.cells.push(col)
-        }
 
         return grid;
     }
 
-    pub fn each_cell<F>(&mut self, mut f: F)
-    where
-        F: FnMut(&mut Grid, &Cell),
-    {
-        for x in 0..self.width {
-            for y in 0..self.height {
-                f(self, &mut self.cells[x][y].clone());
-            }
-        }
-    }
+    // pub fn each_cell<F>(&mut self, mut f: F)
+    // where
+    //     F: FnMut(&mut Grid, &Cell),
+    // {
+    //     for cell in self.cells.iter() {
+    //         f(self, cell);
+    //     }
+    // }
 
     pub fn format(&mut self) -> String {
         let mut ascii = String::new();
@@ -54,16 +39,21 @@ impl Grid {
         ascii += &iter::repeat("---+").take(self.width).collect::<String>()[..];
         ascii += "\n";
         for y in 0..self.height {
+            let row_start_index = y * self.width;
+            let row_end_index = row_start_index + self.width;
+            let row = &self.cells[row_start_index..row_end_index];
+
             let mut top = String::from("|");
             let mut bottom = String::from("+");
-            for x in 0..self.width {
-                top += &self.cells[x][y].to_string()[..];
 
-                match self.is_linked_indices(x, y, x + 1, y) {
+            for cell in row {
+                top += &cell.to_string()[..];
+
+                match cell.is_linked_east {
                     true => top += " ",
                     false => top += "|",
                 }
-                match self.is_linked_indices(x, y, x, y + 1) {
+                match cell.is_linked_south {
                     true => bottom += "   +",
                     false => bottom += "---+",
                 }
@@ -88,45 +78,47 @@ impl Grid {
     //     }
     // }
 
-    pub fn is_linked_indices(&self, x1: usize, y1: usize, x2: usize, y2: usize) -> bool {
-        match self.links.get(&(x1, y1)) {
-            Some(set) => match set.get(&(x2, y2)) {
-                Some(_) => true,
-                _ => false,
-            },
-            None => false,
-        }
-    }
+    // pub fn is_linked_indices(&self, i: usize, j: usize) -> bool {
+    //     let cell1 = self[i];
 
-    pub fn link(&mut self, cell_a: &Cell, cell_b: &Cell) {
-        match self.links.contains_key(&(cell_a.x, cell_a.y)) {
-            true => {
-                self.links
-                    .get_mut(&(cell_a.x, cell_a.y))
-                    .unwrap()
-                    .insert((cell_b.x, cell_b.y));
-            }
-            false => {
-                let mut set: BTreeSet<(usize, usize)> = BTreeSet::new();
-                set.insert((cell_b.x, cell_b.y));
-                self.links.insert((cell_a.x, cell_a.y), set);
-            }
-        }
+    //     match self.links.get(&(x1, y1)) {
+    //         Some(set) => match set.get(&(x2, y2)) {
+    //             Some(_) => true,
+    //             _ => false,
+    //         },
+    //         None => false,
+    //     }
+    // }
 
-        match self.links.contains_key(&(cell_b.x, cell_b.y)) {
-            true => {
-                self.links
-                    .get_mut(&(cell_b.x, cell_b.y))
-                    .unwrap()
-                    .insert((cell_a.x, cell_a.y));
-            }
-            false => {
-                let mut set: BTreeSet<(usize, usize)> = BTreeSet::new();
-                set.insert((cell_a.x, cell_a.y));
-                self.links.insert((cell_b.x, cell_b.y), set);
-            }
-        }
-    }
+    // pub fn link(&mut self, cell_a: &Cell, cell_b: &Cell) {
+    //     match self.links.contains_key(&(cell_a.x, cell_a.y)) {
+    //         true => {
+    //             self.links
+    //                 .get_mut(&(cell_a.x, cell_a.y))
+    //                 .unwrap()
+    //                 .insert((cell_b.x, cell_b.y));
+    //         }
+    //         false => {
+    //             let mut set: BTreeSet<(usize, usize)> = BTreeSet::new();
+    //             set.insert((cell_b.x, cell_b.y));
+    //             self.links.insert((cell_a.x, cell_a.y), set);
+    //         }
+    //     }
+
+    //     match self.links.contains_key(&(cell_b.x, cell_b.y)) {
+    //         true => {
+    //             self.links
+    //                 .get_mut(&(cell_b.x, cell_b.y))
+    //                 .unwrap()
+    //                 .insert((cell_a.x, cell_a.y));
+    //         }
+    //         false => {
+    //             let mut set: BTreeSet<(usize, usize)> = BTreeSet::new();
+    //             set.insert((cell_a.x, cell_a.y));
+    //             self.links.insert((cell_b.x, cell_b.y), set);
+    //         }
+    //     }
+    // }
 
     // pub fn links(&mut self, cell: Cell) -> Option<&BTreeSet<(usize, usize)>> {
     //     match self.links.contains_key(&(cell.x, cell.y)) {
@@ -135,23 +127,47 @@ impl Grid {
     //     }
     // }
 
-    pub fn neighbours(&mut self, cell: Cell) -> Vec<Cell> {
+    pub fn is_north_boundary(&mut self, index: usize) -> bool {
+        index < self.width
+    }
+
+    pub fn is_south_boundary(&mut self, index: usize) -> bool {
+        index >= self.width * self.height - self.width
+    }
+
+    pub fn is_east_boundary(&mut self, index: usize) -> bool {
+        (index + 1) % (self.width) == 0
+    }
+    pub fn is_west_boundary(&mut self, index: usize) -> bool {
+        index == 0 || index % self.width != 0
+    }
+
+    pub fn link_north(&mut self, index: usize) {
+        let mut cell_a = self[index];
+        cell_a.link_north();
+    }
+
+    pub fn neighbours(&mut self, index: usize) -> Vec<Cell> {
         let mut neighbours = Vec::new();
 
-        if cell.x > 0 {
-            neighbours.push(self.cells[cell.x - 1][cell.y].clone())
+        // west
+        if !self.is_west_boundary(index) {
+            neighbours.push(self.cells[index - 1])
         };
 
-        if cell.x < self.width - 1 {
-            neighbours.push(self.cells[cell.x + 1][cell.y].clone());
+        // east
+        if !self.is_east_boundary(index) {
+            neighbours.push(self.cells[index + 1]);
         }
 
-        if cell.y > 0 {
-            neighbours.push(self.cells[cell.x][cell.y - 1].clone());
+        // north
+        if !self.is_north_boundary(index) {
+            neighbours.push(self[index - self.height]);
         }
 
-        if cell.y < self.height - 1 {
-            neighbours.push(self.cells[cell.x][cell.y + 1].clone());
+        // south
+        if !self.is_south_boundary(index) {
+            neighbours.push(self[index + self.width]);
         };
 
         return neighbours;
@@ -159,10 +175,9 @@ impl Grid {
 
     pub fn random_cell(&self) -> Cell {
         let mut rng = thread_rng();
-        let x = rng.gen_range(0, self.width);
-        let y = rng.gen_range(0, self.height);
+        let i = rng.gen_range(0, self.width);
 
-        self.cells[x][y].clone()
+        self.cells[i]
     }
 
     // pub fn unlink(&mut self, cell_a: &Cell, cell_b: &Cell) {
@@ -223,26 +238,33 @@ impl Grid {
         document.append(boundary_wall_path);
 
         for y in 0..self.height {
-            for x in 0..self.width {
-                let cell = self[x][y];
+            let row_start_index = y * self.width;
+            let row_end_index = row_start_index + self.width + 1;
+            let row = &self.cells[row_start_index..row_end_index];
 
-                let is_linked_east = self.is_linked_indices(cell.x, cell.y, cell.x + 1, cell.y);
-                let is_linked_south = self.is_linked_indices(cell.x, cell.y, cell.x, cell.y + 1);
+            for (i, cell) in row.iter().enumerate() {
+                // let cell = self[x][y];
 
-                let x1 = cell.x * cell_size;
-                let y1 = cell.y * cell_size;
-                let x2 = (cell.x + 1) * cell_size;
-                let y2 = (cell.y + 1) * cell_size;
+                // let is_linked_east = self.is_linked_indices(cell.x, cell.y, cell.x + 1, cell.y);
+                // let is_linked_south = self.is_linked_indices(cell.x, cell.y, cell.x, cell.y + 1);
+
+                let y = i / self.width;
+                let x = i - y * self.width;
+
+                let x1 = x * cell_size;
+                let y1 = y * cell_size;
+                let x2 = (x + 1) * cell_size;
+                let y2 = (y + 1) * cell_size;
 
                 let mut cell_data = Data::new();
 
                 // east wall
-                if !is_linked_east && cell.x != self.width - 1 {
+                if !cell.is_linked_east && x != self.width - 1 {
                     cell_data = cell_data.move_to((x2, y1)).line_to((x2, y2));
                 }
 
                 // south wall
-                if !is_linked_south {
+                if !cell.is_linked_south {
                     cell_data = cell_data.move_to((x1, y2)).line_to((x2, y2));
                 }
 
@@ -262,9 +284,9 @@ impl Grid {
 }
 
 impl Index<usize> for Grid {
-    type Output = Vec<Cell>;
+    type Output = Cell;
 
-    fn index<'a>(&'a self, index: usize) -> &'a Vec<Cell> {
+    fn index(&self, index: usize) -> &Cell {
         &self.cells[index]
     }
 }

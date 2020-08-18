@@ -4,20 +4,37 @@ use crate::types::{cell::Cell, grid::Grid};
 use rand::seq::SliceRandom;
 use rand::thread_rng;
 
+enum Direction {
+    North,
+    East,
+}
+
 pub fn generate(grid: &mut Grid) {
-    grid.each_cell(|grid, cell| {
-        let mut north_and_east: Vec<Cell> = Vec::new();
+    for i in 0..grid.cells.len() {
+        let mut possible_links: Vec<Direction> = Vec::new();
 
-        if cell.x < (grid.width - 1) {
-            north_and_east.push(grid[cell.x + 1][cell.y].clone());
-        }
-        if cell.y > 0 {
-            north_and_east.push(grid[cell.x][cell.y - 1].clone());
+        if !grid.is_north_boundary(i) {
+            possible_links.push(Direction::North)
         }
 
-        if north_and_east.len() > 0 {
+        if !grid.is_east_boundary(i) {
+            println!("not east boundary");
+            possible_links.push(Direction::East)
+        }
+
+        if possible_links.len() > 0 {
             let mut rng = thread_rng();
-            grid.link(cell, north_and_east.choose(&mut rng).unwrap())
+            match possible_links.choose(&mut rng).unwrap() {
+                Direction::North => {
+                    println!("linking north");
+                    grid.cells[i].link_north();
+                    grid.cells[i - grid.width].link_south();
+                }
+                Direction::East => {
+                    grid.cells[i].link_east();
+                    grid.cells[i + 1].link_west();
+                }
+            }
         }
-    })
+    }
 }

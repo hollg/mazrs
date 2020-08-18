@@ -2,8 +2,8 @@ use std::str::FromStr;
 
 pub enum Algorithm {
     Binary,
-    Sidewinder,
-    AldousBroder,
+    // Sidewinder,
+    // AldousBroder,
 }
 
 impl FromStr for Algorithm {
@@ -11,8 +11,8 @@ impl FromStr for Algorithm {
     fn from_str(s: &str) -> Result<Self, Self::Err> {
         match s {
             "binary" => Ok(Algorithm::Binary),
-            "sidewinder" => Ok(Algorithm::Sidewinder),
-            "aldous-broder" => Ok(Algorithm::AldousBroder),
+            // "sidewinder" => Ok(Algorithm::Sidewinder),
+            // "aldous-broder" => Ok(Algorithm::AldousBroder),
             _ => Err("no match"),
         }
     }
