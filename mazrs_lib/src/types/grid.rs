@@ -61,20 +61,16 @@ impl Grid {
 
     pub fn link_cells(&mut self, index_a: usize, index_b: usize) {
         if index_b + self.width == index_a {
-            println!("linking north");
             self.link_cell_north(index_a);
         }
 
         if index_b >= self.width && index_b - self.width == index_a {
-            println!("linking south");
             self.link_cell_south(index_a);
         }
         if index_b + 1 == index_a {
-            println!("linking west");
             self.link_cell_west(index_a);
         }
         if index_b >= 1 && index_b - 1 == index_a {
-            println!("linking east");
             self.link_cell_east(index_a);
         }
     }
@@ -110,9 +106,7 @@ impl Grid {
     }
 
     pub fn is_east_boundary(&self, index: usize) -> bool {
-        let is_east = (index + 1) % (self.width) == 0;
-        println!("is_east {} {}", index, is_east);
-        is_east
+        (index + 1) % (self.width) == 0
     }
     pub fn is_west_boundary(&self, index: usize) -> bool {
         index == 0 || index % self.width == 0

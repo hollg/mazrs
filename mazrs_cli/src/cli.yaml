@@ -8,13 +8,13 @@ args:
           long: height
           help: Specifies the number of rows in the grid
           takes_value: true
-          default_value: '5'
+          default_value: '20'
     - width:
           short: w
           long: width
           help: Specifies the number of columns in the grid
           takes_value: true
-          default_value: '5'
+          default_value: '20'
     - output:
           short: o
           long: output

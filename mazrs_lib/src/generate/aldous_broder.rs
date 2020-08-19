@@ -14,8 +14,6 @@ pub fn generate(grid: &mut Grid) {
     while visited_cells.iter().any(|visited| !visited) {
         neighbours.clear();
         grid.neighbours(curr_index, &mut neighbours);
-        println!("cell: {}", curr_index);
-        println!("neighbours: {:?}", neighbours);
         let neighbour_index = *neighbours.choose(&mut rng).unwrap();
         if !visited_cells[neighbour_index] {
             grid.link_cells(curr_index, neighbour_index);

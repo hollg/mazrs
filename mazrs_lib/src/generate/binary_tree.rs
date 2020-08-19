@@ -1,6 +1,6 @@
 extern crate rand;
 
-use crate::types::{grid::Grid};
+use crate::types::grid::Grid;
 use rand::seq::SliceRandom;
 use rand::thread_rng;
 
@@ -18,7 +18,6 @@ pub fn generate(grid: &mut Grid) {
         }
 
         if !grid.is_east_boundary(i) {
-            println!("not east boundary");
             possible_links.push(Direction::East)
         }
 
@@ -26,7 +25,6 @@ pub fn generate(grid: &mut Grid) {
             let mut rng = thread_rng();
             match possible_links.choose(&mut rng).unwrap() {
                 Direction::North => {
-                    println!("linking north");
                     grid.cells[i].link_north();
                     grid.cells[i - grid.width].link_south();
                 }
