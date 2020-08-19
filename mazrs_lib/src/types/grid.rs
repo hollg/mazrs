@@ -1,7 +1,8 @@
 use super::cell::Cell;
 use rand::{thread_rng, Rng};
 use std::iter;
-use std::ops::Index;
+
+use std::ops::{Index, IndexMut};
 use svg::node::element::path::Data;
 use svg::node::element::Path;
 use svg::Document;
@@ -90,20 +91,27 @@ impl Grid {
     //     }
     // }
 
-    // pub fn link(&mut self, cell_a: &Cell, cell_b: &Cell) {
-    //     match self.links.contains_key(&(cell_a.x, cell_a.y)) {
-    //         true => {
-    //             self.links
-    //                 .get_mut(&(cell_a.x, cell_a.y))
-    //                 .unwrap()
-    //                 .insert((cell_b.x, cell_b.y));
-    //         }
-    //         false => {
-    //             let mut set: BTreeSet<(usize, usize)> = BTreeSet::new();
-    //             set.insert((cell_b.x, cell_b.y));
-    //             self.links.insert((cell_a.x, cell_a.y), set);
-    //         }
-    //     }
+    pub fn link_cell_north(&mut self, index: usize) {
+        let width = self.width;
+        self.cells[index].is_linked_north = true;
+        self.cells[index - width].is_linked_south = true;
+    }
+
+    pub fn link_cell_south(&mut self, index: usize) {
+        let width = self.width;
+        self[index].is_linked_south = true;
+        self[index + width].is_linked_north = true;
+    }
+
+    pub fn link_cell_west(&mut self, index: usize) {
+        self[index].is_linked_west = true;
+        self[index - 1].is_linked_east = true;
+    }
+
+    pub fn link_cell_east(&mut self, index: usize) {
+        self[index].is_linked_east = true;
+        self[index + 1].is_linked_west = true;
+    }
 
     //     match self.links.contains_key(&(cell_b.x, cell_b.y)) {
     //         true => {
@@ -147,29 +155,31 @@ impl Grid {
         cell_a.link_north();
     }
 
-    pub fn neighbours(&mut self, index: usize) -> Vec<Cell> {
+    pub fn neighbours(&mut self, index: usize) -> Vec<usize> {
+        println!("index is: {}", index);
         let mut neighbours = Vec::new();
 
         // west
         if !self.is_west_boundary(index) {
-            neighbours.push(self.cells[index - 1])
+            neighbours.push(index - 1)
         };
 
         // east
         if !self.is_east_boundary(index) {
-            neighbours.push(self.cells[index + 1]);
+            neighbours.push(index + 1);
         }
 
         // north
         if !self.is_north_boundary(index) {
-            neighbours.push(self[index - self.height]);
+            neighbours.push(index - self.width);
         }
 
         // south
         if !self.is_south_boundary(index) {
-            neighbours.push(self[index + self.width]);
+            neighbours.push(index + self.width);
         };
 
+        println!("neighbours: {:?}", neighbours);
         return neighbours;
     }
 
@@ -288,5 +298,10 @@ impl Index<usize> for Grid {
 
     fn index(&self, index: usize) -> &Cell {
         &self.cells[index]
+    }
+}
+impl IndexMut<usize> for Grid {
+    fn index_mut(&mut self, index: usize) -> &mut Cell {
+        &mut self.cells[index]
     }
 }
