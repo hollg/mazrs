@@ -72,7 +72,6 @@ impl Grid {
         if index_b + 1 == index_a {
             println!("linking west");
             self.link_cell_west(index_a);
-            
         }
         if index_b >= 1 && index_b - 1 == index_a {
             println!("linking east");
@@ -178,7 +177,6 @@ impl Grid {
             let row = &self.cells[row_start_index..row_end_index];
 
             for (i, cell) in row.iter().enumerate() {
-
                 let y = i / self.width;
                 let x = i - y * self.width;
 
