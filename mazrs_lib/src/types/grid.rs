@@ -11,7 +11,6 @@ pub struct Grid {
     pub height: usize,
     pub width: usize,
     pub cells: Box<[Cell]>,
-    // pub links: HashMap<(usize, usize), BTreeSet<(usize, usize)>>,
 }
 
 impl Grid {
@@ -24,15 +23,6 @@ impl Grid {
 
         return grid;
     }
-
-    // pub fn each_cell<F>(&mut self, mut f: F)
-    // where
-    //     F: FnMut(&mut Grid, &Cell),
-    // {
-    //     for cell in self.cells.iter() {
-    //         f(self, cell);
-    //     }
-    // }
 
     pub fn format(&mut self) -> String {
         let mut ascii = String::new();
@@ -69,27 +59,26 @@ impl Grid {
         return ascii;
     }
 
-    // pub fn is_linked(&mut self, cell_a: Cell, cell_b: Cell) -> bool {
-    //     match self.links.get(&(cell_a.x, cell_a.y)) {
-    //         Some(set) => match set.get(&(cell_b.x, cell_b.y)) {
-    //             Some(_) => true,
-    //             _ => false,
-    //         },
-    //         _ => false,
-    //     }
-    // }
+    pub fn link_cells(&mut self, index_a: usize, index_b: usize) {
+        if index_b + self.width == index_a {
+            println!("linking north");
+            self.link_cell_north(index_a);
+        }
 
-    // pub fn is_linked_indices(&self, i: usize, j: usize) -> bool {
-    //     let cell1 = self[i];
-
-    //     match self.links.get(&(x1, y1)) {
-    //         Some(set) => match set.get(&(x2, y2)) {
-    //             Some(_) => true,
-    //             _ => false,
-    //         },
-    //         None => false,
-    //     }
-    // }
+        if index_b >= self.width && index_b - self.width == index_a {
+            println!("linking south");
+            self.link_cell_south(index_a);
+        }
+        if index_b + 1 == index_a {
+            println!("linking west");
+            self.link_cell_west(index_a);
+            
+        }
+        if index_b >= 1 && index_b - 1 == index_a {
+            println!("linking east");
+            self.link_cell_east(index_a);
+        }
+    }
 
     pub fn link_cell_north(&mut self, index: usize) {
         let width = self.width;
@@ -113,74 +102,36 @@ impl Grid {
         self[index + 1].is_linked_west = true;
     }
 
-    //     match self.links.contains_key(&(cell_b.x, cell_b.y)) {
-    //         true => {
-    //             self.links
-    //                 .get_mut(&(cell_b.x, cell_b.y))
-    //                 .unwrap()
-    //                 .insert((cell_a.x, cell_a.y));
-    //         }
-    //         false => {
-    //             let mut set: BTreeSet<(usize, usize)> = BTreeSet::new();
-    //             set.insert((cell_a.x, cell_a.y));
-    //             self.links.insert((cell_b.x, cell_b.y), set);
-    //         }
-    //     }
-    // }
-
-    // pub fn links(&mut self, cell: Cell) -> Option<&BTreeSet<(usize, usize)>> {
-    //     match self.links.contains_key(&(cell.x, cell.y)) {
-    //         true => Some(self.links.get(&(cell.x, cell.y)).unwrap()),
-    //         false => None,
-    //     }
-    // }
-
-    pub fn is_north_boundary(&mut self, index: usize) -> bool {
+    pub fn is_north_boundary(&self, index: usize) -> bool {
         index < self.width
     }
 
-    pub fn is_south_boundary(&mut self, index: usize) -> bool {
-        index >= self.width * self.height - self.width
+    pub fn is_south_boundary(&self, index: usize) -> bool {
+        index >= self.size() - self.width
     }
 
-    pub fn is_east_boundary(&mut self, index: usize) -> bool {
-        (index + 1) % (self.width) == 0
+    pub fn is_east_boundary(&self, index: usize) -> bool {
+        let is_east = (index + 1) % (self.width) == 0;
+        println!("is_east {} {}", index, is_east);
+        is_east
     }
-    pub fn is_west_boundary(&mut self, index: usize) -> bool {
-        index == 0 || index % self.width != 0
-    }
-
-    pub fn link_north(&mut self, index: usize) {
-        let mut cell_a = self[index];
-        cell_a.link_north();
+    pub fn is_west_boundary(&self, index: usize) -> bool {
+        index == 0 || index % self.width == 0
     }
 
-    pub fn neighbours(&mut self, index: usize) -> Vec<usize> {
-        println!("index is: {}", index);
-        let mut neighbours = Vec::new();
-
-        // west
-        if !self.is_west_boundary(index) {
-            neighbours.push(index - 1)
-        };
-
-        // east
-        if !self.is_east_boundary(index) {
-            neighbours.push(index + 1);
-        }
-
-        // north
+    pub fn neighbours(&self, index: usize, buf: &mut Vec<usize>) {
         if !self.is_north_boundary(index) {
-            neighbours.push(index - self.width);
+            buf.push(index - self.width);
         }
-
-        // south
         if !self.is_south_boundary(index) {
-            neighbours.push(index + self.width);
-        };
-
-        println!("neighbours: {:?}", neighbours);
-        return neighbours;
+            buf.push(index + self.width);
+        }
+        if !self.is_east_boundary(index) {
+            buf.push(index + 1);
+        }
+        if !self.is_west_boundary(index) {
+            buf.push(index - 1);
+        }
     }
 
     pub fn random_cell(&self) -> Cell {
@@ -190,33 +141,7 @@ impl Grid {
         self.cells[i]
     }
 
-    // pub fn unlink(&mut self, cell_a: &Cell, cell_b: &Cell) {
-    //     match self.links.contains_key(&(cell_a.x, cell_a.y)) {
-    //         true => {
-    //             let set = self.links.get_mut(&(cell_a.x, cell_a.y)).unwrap();
-    //             set.remove(&(cell_b.x, cell_b.y));
-
-    //             if set.is_empty() {
-    //                 self.links.remove(&(cell_a.x, cell_a.y));
-    //             }
-    //         }
-    //         false => {}
-    //     }
-
-    //     match self.links.contains_key(&(cell_b.x, cell_b.y)) {
-    //         true => {
-    //             let set = self.links.get_mut(&(cell_b.x, cell_b.y)).unwrap();
-    //             set.remove(&(cell_a.x, cell_a.y));
-
-    //             if set.is_empty() {
-    //                 self.links.remove(&(cell_b.x, cell_b.y));
-    //             }
-    //         }
-    //         false => {}
-    //     }
-    // }
-
-    pub fn size(&mut self) -> usize {
+    pub fn size(&self) -> usize {
         self.width * self.height
     }
 
@@ -253,10 +178,6 @@ impl Grid {
             let row = &self.cells[row_start_index..row_end_index];
 
             for (i, cell) in row.iter().enumerate() {
-                // let cell = self[x][y];
-
-                // let is_linked_east = self.is_linked_indices(cell.x, cell.y, cell.x + 1, cell.y);
-                // let is_linked_south = self.is_linked_indices(cell.x, cell.y, cell.x, cell.y + 1);
 
                 let y = i / self.width;
                 let x = i - y * self.width;

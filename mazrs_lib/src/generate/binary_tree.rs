@@ -1,6 +1,6 @@
 extern crate rand;
 
-use crate::types::{cell::Cell, grid::Grid};
+use crate::types::{grid::Grid};
 use rand::seq::SliceRandom;
 use rand::thread_rng;
 
