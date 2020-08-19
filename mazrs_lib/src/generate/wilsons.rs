@@ -15,6 +15,8 @@ pub fn generate(grid: &mut Grid) {
         // when the path hits a visited cell, link it up
         if visited_cells[*path.last().unwrap()] {
             for window in path.windows(2) {
+                visited_cells[window[0]] = true;
+                visited_cells[window[1]] = true;
                 grid.link_cells(window[0], window[1]);
             }
             path.clear();
