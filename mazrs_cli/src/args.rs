@@ -4,6 +4,7 @@ pub enum Algorithm {
     Binary,
     Sidewinder,
     AldousBroder,
+    Wilsons,
 }
 
 impl FromStr for Algorithm {
@@ -13,6 +14,7 @@ impl FromStr for Algorithm {
             "binary" => Ok(Algorithm::Binary),
             "sidewinder" => Ok(Algorithm::Sidewinder),
             "aldous-broder" => Ok(Algorithm::AldousBroder),
+            "wilsons" => Ok(Algorithm::Wilsons),
             _ => Err("no match"),
         }
     }

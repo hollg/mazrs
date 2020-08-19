@@ -27,5 +27,5 @@ args:
           long: algorithm
           help: Sets the algorithm used to build the maze
           takes_value: true
-          possible_values: ['binary', 'sidewinder', 'aldous-broder']
+          possible_values: ['binary', 'sidewinder', 'aldous-broder', 'wilsons']
           default_value: 'aldous-broder'
