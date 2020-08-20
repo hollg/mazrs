@@ -1,6 +1,6 @@
 mod args;
 use args::{Algorithm, Output};
-use mazrs_lib::generate::{aldous_broder, binary_tree, sidewinder, wilsons};
+use mazrs_lib::generate::{aldous_broder, binary_tree, sidewinder, wilsons, hunt_and_kill};
 use mazrs_lib::types::grid::*;
 use svg;
 #[macro_use]
@@ -33,6 +33,7 @@ fn main() {
         Ok(Algorithm::Sidewinder) => sidewinder::generate(&mut grid),
         Ok(Algorithm::AldousBroder) => aldous_broder::generate(&mut grid),
         Ok(Algorithm::Wilsons) => wilsons::generate(&mut grid),
+        Ok(Algorithm::HuntAndKill) => hunt_and_kill::generate(&mut grid),
         Err(_) => panic!("Invalid algorithm argument"),
     }
 

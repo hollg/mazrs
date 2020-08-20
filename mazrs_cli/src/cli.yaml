@@ -8,24 +8,24 @@ args:
           long: height
           help: Specifies the number of rows in the grid
           takes_value: true
-          default_value: '20'
+          default_value: '5'
     - width:
           short: w
           long: width
           help: Specifies the number of columns in the grid
           takes_value: true
-          default_value: '20'
+          default_value: '5'
     - output:
           short: o
           long: output
           help: Specifies how the maze should be output
           takes_value: true
           possible_values: ['ascii', 'svg']
-          default_value: 'svg'
+          default_value: 'ascii'
     - algorithm:
           short: a
           long: algorithm
           help: Sets the algorithm used to build the maze
           takes_value: true
-          possible_values: ['binary', 'sidewinder', 'aldous-broder', 'wilsons']
-          default_value: 'aldous-broder'
+          possible_values: ['binary', 'sidewinder', 'aldous-broder', 'wilsons', 'hunt-and-kill']
+          default_value: 'hunt-and-kill'
