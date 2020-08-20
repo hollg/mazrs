@@ -167,22 +167,19 @@ impl Grid {
 
         for y in 0..self.height {
             let row_start_index = y * self.width;
-            let row_end_index = row_start_index + self.width + 1;
+            let row_end_index = row_start_index + self.width;
             let row = &self.cells[row_start_index..row_end_index];
 
             for (i, cell) in row.iter().enumerate() {
-                let y = i / self.width;
-                let x = i - y * self.width;
-
-                let x1 = x * cell_size;
+                let x1 = i * cell_size;
                 let y1 = y * cell_size;
-                let x2 = (x + 1) * cell_size;
+                let x2 = (i + 1) * cell_size;
                 let y2 = (y + 1) * cell_size;
 
                 let mut cell_data = Data::new();
 
                 // east wall
-                if !cell.is_linked_east && x != self.width - 1 {
+                if !cell.is_linked_east {
                     cell_data = cell_data.move_to((x2, y1)).line_to((x2, y2));
                 }
 

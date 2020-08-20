@@ -13,7 +13,6 @@ pub fn generate(grid: &mut Grid) {
 
     while visited_cells.iter().any(|visited| !visited) {
         visited_cells[curr_index] = true;
-        println!("curr_index: {}", curr_index);
         grid.neighbours(curr_index, neighbours);
         neighbours.retain(|neighbour| !visited_cells[*neighbour]);
 
