@@ -12,11 +12,3 @@ pub fn generate() -> String {
     let svg = grid.to_svg();
     svg.to_string()
 }
-
-// #[cfg(test)]
-// mod tests {
-//     #[test]
-//     fn it_works() {
-//         assert_eq!(2 + 2, 4);
-//     }
-// }

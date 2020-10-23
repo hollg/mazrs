@@ -152,10 +152,9 @@ impl Grid {
         let boundary_wall_data = Data::new()
             .move_to((0, 0))
             .line_to((img_width, 0))
-            .line_to((img_width, img_height - cell_size))
             .move_to((img_width, img_height))
             .line_to((0, img_height))
-            .line_to((0, cell_size));
+            .line_to((0, 0));
         let boundary_wall_path = Path::new()
             .set("fill", background_color)
             .set("stroke", wall_color)
