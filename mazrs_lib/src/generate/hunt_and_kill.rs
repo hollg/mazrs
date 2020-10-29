@@ -4,6 +4,12 @@ use rand::thread_rng;
 
 use crate::types::grid::*;
 
+// 1. Choose a starting location.
+// 2. Perform a random walk, carving passages to unvisited neighbors, until the current cell has no unvisited neighbors.
+// 3. Go to the first cell that is both unvisited and adjacent to a visited cell. 
+// 4. If found, carve a passage between the two and let the formerly unvisited cell be the new starting location.
+// 5. Repeat steps 2 - 4 until there are no unvisited cells.
+
 pub fn generate(grid: &mut Grid) {
     let rng = &mut thread_rng();
     let mut visited_cells = vec![false; grid.size()];
